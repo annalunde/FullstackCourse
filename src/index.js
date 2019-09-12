@@ -1,25 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 const App = () => {
-    const course = 'Half Stack application development'
-    const part1 = 'Fundamentals of React'
-    const exercises1 = 10
-    const part2 = 'Using props to pass data'
-    const exercises2 = 7
-    const part3 = 'State of a component'
-    const exercises3 = 14
-  
+    const course = {
+      name:'Half Stack application development',
+      parts: [
+        { 
+          name:'Fundamentals of React',
+          exercises: 10
+        },
+        {
+          name:'Using props to pass data',
+          exercises: 7
+        },
+        {
+          name:'State of a component',
+          exercises: 14
+        }
+      ]
+    }
+    
     return (
       <div>
          <Header course={course} />
         
-         <Content partname={part1} exercisesnum={exercises1} />
+        <Content parts={course.parts} />
         
-        <Content partname={part2} exercisesnum={exercises2} />
-        
-        <Content partname={part3} exercisesnum={exercises3} />
-        
-        <Total totalnum={exercises1 + exercises2 + exercises3}/>
+        <Total parts={course.parts}/>
       </div>
     )
   }
@@ -28,7 +34,7 @@ const App = () => {
     return (
         <div>
           <h1>
-            {props.course}
+            {props.course.name}
           </h1>
         </div>
       )
@@ -38,19 +44,33 @@ const App = () => {
   const Content = (props) => {
     return (
         <div>
-          <p>
-            {props.partname} has {props.exercisesnum} exercises
-          </p>
+          <Part part={props.parts[0]}  />
+          <Part part={props.parts[1]}  />
+          <Part part={props.parts[2]}  />
         </div>
       )
       
 }
+const Part = (props) => {
+  return (
+    <div>
+          <p>
+          {props.part.name} includes {props.part.exercises} exercises
+          </p>
+        </div>
+  )
+}
 
   const Total = (props) => {
+    let sum = 0;
+    props.parts.forEach( part => {
+      sum += part.exercises;
+  })
+      
     return (
         <div>
           <p>
-            The total number of exercises is {props.totalnum} 
+            The total number of exercises is {sum} 
           </p>
         </div>
       )
@@ -59,27 +79,3 @@ const App = () => {
   
   ReactDOM.render(<App />, document.getElementById('root'))
   
-
-  /*
-  const Hello = (props) => {
-  return (
-    <div>
-      <p>
-        Hello {props.name}, you are {props.age} years old
-      </p>
-    </div>
-  )
-}
-
-const App = () => {
-  const name = 'Peter'
-  const age = 10
-
-  return (
-    <div>
-      <h1>Greetings</h1>
-      <Hello name="Maya" age={26 + 10} />
-      <Hello name={name} age={age} />
-    </div>
-  )
-}*/
