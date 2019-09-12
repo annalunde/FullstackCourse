@@ -1,0 +1,8 @@
+title Part0.6
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+server-->browser: HTTP 201
+
+
+note over browser:
+The browser now knows that the new note was created.
+end note
