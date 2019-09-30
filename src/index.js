@@ -1,81 +1,75 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-const App = () => {
-    const course = {
-      name:'Half Stack application development',
-      parts: [
-        { 
-          name:'Fundamentals of React',
-          exercises: 10
-        },
-        {
-          name:'Using props to pass data',
-          exercises: 7
-        },
-        {
-          name:'State of a component',
-          exercises: 14
-        }
-      ]
+
+const Button = ({onClick, text}) => (
+<button onClick={onClick}>{text}</button>
+)
+const Anecdote = ({anecdote,points}) => {
+  return (
+  <div>
+    <p>{anecdote}</p> 
+    <p>has {points || 0} votes</p>
+  </div>
+  )
+}
+const mostVoted = (anecdotes,points) => {
+  let highestVotes = 0
+  let highestVoted = anecdotes[0]
+  for (let i = 0; i < anecdotes.length; i++) {
+    if (points[i] > highestVotes) {
+      highestVotes = points[i]
+      highestVoted = anecdotes[i]
     }
-    
+  }
+  return {highestVoted, highestVotes}
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+const App = (props) => {
+  const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState({})
+  
+  const handleNextClick = () => {
+    const num = getRandomInt(6)
     return (
       <div>
-         <Header course={course} />
-        
-        <Content parts={course.parts} />
-        
-        <Total parts={course.parts}/>
+        {setSelected(num)}
       </div>
     )
   }
-
-  const  Header = (props) => {
-    return (
-        <div>
-          <h1>
-            {props.course.name}
-          </h1>
-        </div>
-      )
-
+  const handleVoteClick = () => {
+    const copy = {...points}
+    const currentVotes = copy[selected] || 0
+    copy[selected] = currentVotes + 1 
+    setPoints(copy)
   }
 
-  const Content = (props) => {
-    return (
-        <div>
-          <Part part={props.parts[0]}  />
-          <Part part={props.parts[1]}  />
-          <Part part={props.parts[2]}  />
-        </div>
-      )
-      
-}
-const Part = (props) => {
+  const mostVotedAnec = mostVoted(anecdotes,points)
   return (
     <div>
-          <p>
-          {props.part.name} includes {props.part.exercises} exercises
-          </p>
-        </div>
+      <h3>Anecdote of the day</h3>
+      <Anecdote anecdote={anecdotes[selected]} points={points[selected]} />
+      <Button onClick={handleNextClick} text='Next anecdote' />
+      <Button onClick={handleVoteClick} text='Vote' />
+      <h4>Anecdote with most votes</h4>
+      <Anecdote anecdote={mostVotedAnec.highestVoted} points={mostVotedAnec.highestVotes} />
+    </div>
   )
 }
 
-  const Total = (props) => {
-    let sum = 0;
-    props.parts.forEach( part => {
-      sum += part.exercises;
-  })
-      
-    return (
-        <div>
-          <p>
-            The total number of exercises is {sum} 
-          </p>
-        </div>
-      )
-      
-}
-  
-  ReactDOM.render(<App />, document.getElementById('root'))
-  
+const anecdotes = [
+  'If it hurts, do it more often',
+  'Adding manpower to a late software project makes it later!',
+  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+  'Premature optimization is the root of all evil.',
+  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
+]
+
+ReactDOM.render(
+  <App anecdotes={anecdotes} />,
+  document.getElementById('root')
+)
