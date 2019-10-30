@@ -4,7 +4,7 @@ const Persons = ({ persons, delPerson }) => {
   return (
     <>
       {persons.map(person => (
-        <p key={person.name}>
+        <li className='person' key={person.name}>
           {person.name} {person.number}
           <button
                   onClick={() => {
@@ -14,7 +14,7 @@ const Persons = ({ persons, delPerson }) => {
                 >
                   Delete
                 </button>
-        </p>
+        </li>
       ))}
     </>
   );
